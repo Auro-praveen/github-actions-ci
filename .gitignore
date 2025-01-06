@@ -1,0 +1,21 @@
+# binaries
+*.class
+*.war
+*.jar
+
+# logs
+*.logs
+
+# ide files
+.idea/
+*.iml
+*.classpath
+*.project
+
+# Build Directories
+/target/
+/bin/
+
+# OS Files
+.DS_Store
+Thumbs.db
