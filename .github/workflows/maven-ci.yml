@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{matrix.os}}    # when we want to test it on all the os platform 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
 
     # runs-on: ubuntu-latest  # when we want to test it in single os environment ubuntu
 
@@ -38,6 +38,19 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+
+    - name: build and push docker image to docker hub
+      uses: docker/build-push-action@v6
+      with:
+        image: praveenfc/tuckit_locker_back_github_action:3.10.11
+        registry: docker.io
+        username: ${{secrets.DOCKER_USERNAME}}
+        password: ${{secrets.DOCKER_SECRET_TOKEN}}
+
+
+    # docker for linux is pre-installed but for mac and windows we need to install it manually, so firstly testing it for linux
+    #- name: generating a docker image and push it docker repository 
+
 
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
