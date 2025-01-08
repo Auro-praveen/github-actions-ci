@@ -21,12 +21,12 @@ jobs:
   build:
 
     # in yml ${{variable-name}} is used for declaring the variables in our case its matrix.os because we testing it for 3 os one after the other
-    runs-on: ${{matrix.os}}    # when we want to test it on all the os platform 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+#    runs-on: ${{matrix.os}}    # when we want to test it on all the os platform 
+#    strategy:
+#      matrix:
+#        os: [ubuntu-latest]
 
-    # runs-on: ubuntu-latest  # when we want to test it in single os environment ubuntu
+    runs-on: ubuntu-latest  # when we want to test it in single os environment ubuntu
 
     steps:
     - uses: actions/checkout@v4
