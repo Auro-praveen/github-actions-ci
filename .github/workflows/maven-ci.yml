@@ -6,52 +6,47 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-
 # for testing all os platforms in our case for ubuntu, windows and macos
 
-name: Java CI with Maven  #name is optional
+name: Java CI with Maven #name is optional
 
-on:         # required
+on: # required
   push:
-    branches: [ "main" ]  # name of the github event that triggers the workflow inn this case its master or main  when code  is pushed
+    branches: ["main"] # name of the github event that triggers the workflow inn this case its master or main  when code  is pushed
   pull_request:
-    branches: [ "main" ]  # name of the github event that triggers the workflow  in our case its main or master when comeone makes pull request
+    branches: ["main"] # name of the github event that triggers the workflow  in our case its main or master when comeone makes pull request
 
 jobs:
   build:
-
     # in yml ${{variable-name}} is used for declaring the variables in our case its matrix.os because we testing it for 3 os one after the other
-#    runs-on: ${{matrix.os}}    # when we want to test it on all the os platform 
-#    strategy:
-#      matrix:
-#        os: [ubuntu-latest]
+    #    runs-on: ${{matrix.os}}    # when we want to test it on all the os platform
+    #    strategy:
+    #      matrix:
+    #        os: [ubuntu-latest]
 
-    runs-on: ubuntu-latest  # when we want to test it in single os environment ubuntu
+    runs-on: ubuntu-latest # when we want to test it in single os environment ubuntu
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17   # name is the name that we give for out action
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17 # name is the name that we give for out action
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
 
-    - name: build and push docker image to docker hub
-      uses: docker/build-push-action@v6
-      with:
-        image: praveenfc/tuckit_locker_back_github_action:3.10.11
-        registry: docker.io
-        username: ${{secrets.DOCKER_USERNAME}}
-        password: ${{secrets.DOCKER_SECRET_TOKEN}}
-
+      - name: build and push docker image to docker hub
+        uses: docker/build-push-action@v6
+        with:
+          image: praveenfc/tuckit_locker_back_github_action
+          registry: docker.io
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_SECRET_TOKEN}}
 
     # docker for linux is pre-installed but for mac and windows we need to install it manually, so firstly testing it for linux
-    #- name: generating a docker image and push it docker repository 
-
-
+    #- name: generating a docker image and push it docker repository
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #    - name: Update dependency graph
