@@ -32,8 +32,17 @@ public class User {
 	
 	private String site_location;
 	
+	private String app_access_allowed;
 	
 	
+	public String getApp_access_allowed() {
+		return app_access_allowed;
+	}
+
+	public void setApp_access_allowed(String app_access_allowed) {
+		this.app_access_allowed = app_access_allowed;
+	}
+
 	public String getSite_name() {
 		return site_name;
 	}

@@ -104,8 +104,13 @@ public class FetchUserLoginDetails extends HttpServlet {
 //			 System.out.println("user Already Active");
 		} else {
 			try {
+				
+//				System.out.println(jsonReq);
 				String hql = "FROM User WHERE userName=:uName and password=:uPassword";
-				User permissions = (User) session.createQuery(hql).setParameter("uName", jsonReq.getString("userName")).setParameter("uPassword", jsonReq.getString("userPassword")).getSingleResult();
+				User permissions = (User) session.createQuery(hql)
+						.setParameter("uName", jsonReq.getString("userName"))
+						.setParameter("uPassword", jsonReq.getString("userPassword"))
+						.getSingleResult();
 				
 				
 				if (permissions.getType().equalsIgnoreCase("Mall-Authority")) {
@@ -118,6 +123,12 @@ public class FetchUserLoginDetails extends HttpServlet {
 				} else {
 					jsonResp.put("responseCode", "usr");
 					jsonResp.put("permissions", permissions.getUserpermissions());
+					if (permissions.getApp_access_allowed() != null && permissions.getApp_access_allowed() != "") {
+						jsonResp.put("appAccessPerminassion", permissions.getApp_access_allowed());
+					} else {
+						jsonResp.put("appAccessPerminassion", "NONE");
+					}
+					
 					jsonResp.put("userpresent", true);
 				}
 				
@@ -134,16 +145,18 @@ public class FetchUserLoginDetails extends HttpServlet {
 			}catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
-				session.close();
+//				session.close();
+//				writer.close();
+			} finally {
+				writer.println(jsonResp.toString());
+				writer.flush();
+				
 				writer.close();
+				session.close();
 			}
 		}
 		
-		writer.println(jsonResp.toString());
-		writer.flush();
-		
-		writer.close();
-		session.close();
+
 		
 	}
 }

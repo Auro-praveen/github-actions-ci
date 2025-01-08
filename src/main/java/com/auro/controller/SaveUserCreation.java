@@ -100,6 +100,7 @@ public class SaveUserCreation extends HttpServlet {
 					user.setSite_location(jsonObj.getString("siteLocation"));
 					user.setSite_name(jsonObj.get("siteName").toString());
 					user.setUserpermissions(userPerm);
+					user.setApp_access_allowed(jsonObj.getString("appPermissions"));
 					
 					int resp = (int) session.save(user);
 				
@@ -128,30 +129,47 @@ public class SaveUserCreation extends HttpServlet {
 			String status = jsonObj.getString("status");
 			String type = jsonObj.getString("type");
 			String userPermissions = jsonObj.getString("userPermissions");
+			String appPermissions = jsonObj.getString("appPermissions");
 //			String siteName = jsonObj.getString("siteName");
 //			String siteLocation = jsonObj.getString("siteLocation");
+			int userId = jsonObj.getInt("userId");
 			
-			String verifyUserHql = "FROM User WHERE userName=:uName AND password=:uPwd";
-			String updateUserHql = "UPDATE User SET status=:status, type=:type, userpermissions=:userPermissions "
-					+ "WHERE userName=:userName";
-			
-			List<User> userDetails = session.createQuery(verifyUserHql).setParameter("uName", uName)
-					.setParameter("uPwd", uPassword).getResultList();
-			if (!userDetails.isEmpty()) {
-				int updateStatus = session.createQuery(updateUserHql).setParameter("status", status).setParameter("type", type)
-						.setParameter("userPermissions", userPermissions).setParameter("userName", userName)
-						.executeUpdate();
+			User newUser = session.get(User.class, userId); 
+			if (newUser != null) {
+				newUser.setApp_access_allowed(appPermissions);
+				newUser.setUserpermissions(userPermissions);
 				
-				System.out.println(updateStatus);
-				
-				if(updateStatus > 0) {
-					respObj.put("responseCode", "upduser-200");
-				} else {
-					respObj.put("responseCode", "upduser-202");
-				}
+//				session.update(newUser);
+				session.getTransaction().commit();
+				respObj.put("responseCode", "upduser-200");
 			} else {
-				respObj.put("responseCode", "pwd-404");
+				respObj.put("responseCode", "upduser-202");
 			}
+			
+			
+			// old way to update user
+//			
+//			String verifyUserHql = "FROM User WHERE userName=:uName AND password=:uPwd";
+//			String updateUserHql = "UPDATE User SET status=:status, type=:type, userpermissions=:userPermissions "
+//					+ "WHERE userName=:userName";
+//			
+//			List<User> userDetails = session.createQuery(verifyUserHql).setParameter("uName", uName)
+//					.setParameter("uPwd", uPassword).getResultList();
+//			if (!userDetails.isEmpty()) {
+//				int updateStatus = session.createQuery(updateUserHql).setParameter("status", status).setParameter("type", type)
+//						.setParameter("userPermissions", userPermissions).setParameter("userName", userName)
+//						.executeUpdate();
+//				
+//				System.out.println(updateStatus);
+//				
+//				if(updateStatus > 0) {
+//					respObj.put("responseCode", "upduser-200");
+//				} else {
+//					respObj.put("responseCode", "upduser-202");
+//				}
+//			} else {
+//				respObj.put("responseCode", "pwd-404");
+//			}
 		}
 		
 		writer.println(respObj.toString());

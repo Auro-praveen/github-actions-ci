@@ -73,6 +73,7 @@ public class HibernateUtils {
 		    cfg.addAnnotatedClass(gstDetails.class);
 		    cfg.addAnnotatedClass(invoiceDetails.class);
 		    cfg.addAnnotatedClass(amountreceiveddetails.class);
+		    cfg.addAnnotatedClass(blockedCustomers.class);
 //		    factory=cfg.buildSessionFactory();
 		    SessionFactory = cfg.buildSessionFactory();
 //		    return SessionFactory;
